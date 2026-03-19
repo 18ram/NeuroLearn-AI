@@ -1,0 +1,98 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and settings",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "Document": {
+      "title": "Document",
+      "description": "Metadata for uploaded learning documents",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "summary": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "content"]
+    },
+    "Quiz": {
+      "title": "Quiz",
+      "description": "AI-generated quiz from document content",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "question": { "type": "string" },
+              "options": { "type": "array", "items": { "type": "string" } },
+              "correctAnswer": { "type": "string" },
+              "type": { "type": "string", "enum": ["mcq", "tf", "fill"] }
+            }
+          }
+        },
+        "difficulty": { "type": "string", "enum": ["easy", "medium", "hard"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Flashcard": {
+      "title": "Flashcard",
+      "description": "AI-generated flashcard for spaced repetition",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "front": { "type": "string" },
+        "back": { "type": "string" },
+        "nextReview": { "type": "string", "format": "date-time" },
+        "interval": { "type": "number" },
+        "easeFactor": { "type": "number" }
+      }
+    },
+    "Progress": {
+      "title": "Progress",
+      "description": "User's learning progress and scores",
+      "type": "object",
+      "properties": {
+        "quizId": { "type": "string" },
+        "score": { "type": "number" },
+        "totalQuestions": { "type": "number" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile data"
+    },
+    "/users/{userId}/documents/{docId}": {
+      "schema": "Document",
+      "description": "User's uploaded documents"
+    },
+    "/users/{userId}/documents/{docId}/quizzes/{quizId}": {
+      "schema": "Quiz",
+      "description": "Quizzes generated for a specific document"
+    },
+    "/users/{userId}/documents/{docId}/flashcards/{cardId}": {
+      "schema": "Flashcard",
+      "description": "Flashcards generated for a specific document"
+    },
+    "/users/{userId}/progress/{progressId}": {
+      "schema": "Progress",
+      "description": "User's quiz performance history"
+    }
+  }
+}
